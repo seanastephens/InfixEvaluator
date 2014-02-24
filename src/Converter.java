@@ -113,7 +113,7 @@ public class Converter {
 		generatePostfix();
 	}
 
-	/*
+	/**
 	 * Private helper method that removes invalid characters from the infix
 	 * expression.
 	 */
@@ -134,7 +134,7 @@ public class Converter {
 		infix = cleanedInfix;
 	}
 
-	/*
+	/**
 	 * Private helper method that adds '*' between adjacent numbers or constants
 	 * in the infix expression.
 	 */
@@ -151,10 +151,11 @@ public class Converter {
 		}
 	}
 
-	/*
+	/**
 	 * Private helper method that converts the instance infix expression into a
 	 * postfix expression.
-	 * 
+	 */
+	/*
 	 * Derived from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm. The
 	 * general procedure for converting an infix expression to a postfix
 	 * expression consists of using a stack and the following rules:
