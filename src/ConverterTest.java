@@ -19,7 +19,6 @@ public class ConverterTest {
 	@Test
 	public void testConstructorAndGetterClearNonCharsAndInsertsStars() {
 		Converter c = new Converter("1+1 * 2 a/b3");
-		System.out.println(c.getInfix());
 		assertTrue(c.getInfix().equals("1+1*2*a/b*3"));
 
 	}
@@ -27,7 +26,6 @@ public class ConverterTest {
 	@Test
 	public void testTwoOperandsAndOneOperator() {
 		Converter c = new Converter("1+1");
-		System.out.println(c.getPostfix());
 		assertTrue(c.getPostfix().equals("11+"));
 	}
 
@@ -66,5 +64,4 @@ public class ConverterTest {
 		Converter c = new Converter("1+2*3+4/5+(6-4)");
 		assertTrue(c.evaluate().equals("9"));
 	}
-
 }
