@@ -155,24 +155,30 @@ public class Converter {
 	 * Private helper method that converts the instance infix expression into a
 	 * postfix expression.
 	 * 
-	 * <p> Derived from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm. The
+	 * Derived from http://csis.pace.edu/~wolf/CS122/infix-postfix.htm. The
 	 * general procedure for converting an infix expression to a postfix
 	 * expression consists of using a stack and the following rules:
 	 * 
-	 * <p> Proceed left to right through the infix expression. If the next
-	 * character: <p> 1) is an operand: add it to the end of the postfix
-	 * expression. <p> 2) is an operator: if the stack is empty, push the
-	 * operator onto the stack. If the stack is not empty and the current
-	 * operator has lower precedence than the operator on the top of the stack
-	 * pop, pop the last element of the stack to the postfix expression, and
-	 * push the current character. If the stack is not empty and the current
-	 * operator has the same precedence as the one on top of the stack, push the
-	 * current charcater onto the stack. <p> 3) is a open parenthesis: push it
-	 * onto the stack. <p> 4) is a close parenthesis: pop from the stack onto
-	 * the postfix expression until we reach an open parenthesis. Pop the open
-	 * parenthesis, but do not add it to the postfix expression.
+	 * Proceed left to right through the infix expression. If the next
+	 * character:
 	 * 
-	 * <p> Finally, pop any remaining characters from the stack.
+	 * 1) is an operand: add it to the end of the postfix expression.
+	 * 
+	 * 2) is an operator: if the stack is empty, push the operator onto the
+	 * stack. If the stack is not empty and the current operator has lower
+	 * precedence than the operator on the top of the stack pop, pop the last
+	 * element of the stack to the postfix expression, and push the current
+	 * character. If the stack is not empty and the current operator has the
+	 * same precedence as the one on top of the stack, push the current
+	 * charcater onto the stack.
+	 * 
+	 * 3) is a open parenthesis: push it onto the stack.
+	 * 
+	 * 4) is a close parenthesis: pop from the stack onto the postfix expression
+	 * until we reach an open parenthesis. Pop the open parenthesis, but do not
+	 * add it to the postfix expression.
+	 * 
+	 * Finally, pop any remaining characters from the stack.
 	 */
 	private void generatePostfix() {
 		Stack<String> stack = new Stack<String>();
@@ -289,15 +295,15 @@ public class Converter {
 	/*
 	 * Follows a standard algorithm for evaluating postfix expressions.
 	 * 
-	 * <p> Proceed left to right throught the postfix expression. If the current
+	 * Proceed left to right throught the postfix expression. If the current
 	 * character:
 	 * 
-	 * <p> 1) is an operand: push it onto the stack.
+	 * 1) is an operand: push it onto the stack.
 	 * 
-	 * <p> 2) is an operator: pop the top two elements from the stack, apply the
+	 * 2) is an operator: pop the top two elements from the stack, apply the
 	 * operator to them, and push the result on the stack.
 	 * 
-	 * <p> Finally, return the value in the stack.
+	 * Finally, return the value in the stack.
 	 */
 	public String evaluate() {
 
