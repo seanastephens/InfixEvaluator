@@ -108,16 +108,18 @@ public class Converter {
 	 */
 	public Converter(String infix) {
 		this.infix = infix;
-		cleanInfix();
+		setupInfix();
 		insertStars();
 		generatePostfix();
 	}
 
 	/**
-	 * Private helper method that removes invalid characters from the infix
-	 * expression.
+	 * Private helper method that builds infixList.
+	 * 
+	 * <p>
+	 * Generates Tokens and inserts
 	 */
-	private void cleanInfix() {
+	private void setupInfix() {
 		String cleanedInfix = "";
 
 		/*
@@ -131,7 +133,9 @@ public class Converter {
 
 			}
 		}
-		infix = cleanedInfix;
+
+		this.infix = cleanedInfix;
+
 	}
 
 	/**
@@ -142,8 +146,22 @@ public class Converter {
 
 		for (int i = 0; i < infix.length() - 1; i++) {
 
-			if (ALL_OPERANDS.contains(infix.substring(i, i + 1))
-					&& ALL_OPERANDS.contains(infix.substring(i + 1, i + 2))) {
+			if (NUMBERS.contains(infix.substring(i, i + 1))
+					&& VARIABLES.contains(infix.substring(i + 1, i + 2))) {
+
+				infix = infix.substring(0, i + 1) + "*"
+						+ infix.substring(i + 1, infix.length());
+			}
+
+			if (VARIABLES.contains(infix.substring(i, i + 1))
+					&& NUMBERS.contains(infix.substring(i + 1, i + 2))) {
+
+				infix = infix.substring(0, i + 1) + "*"
+						+ infix.substring(i + 1, infix.length());
+			}
+
+			if (VARIABLES.contains(infix.substring(i, i + 1))
+					&& VARIABLES.contains(infix.substring(i + 1, i + 2))) {
 
 				infix = infix.substring(0, i + 1) + "*"
 						+ infix.substring(i + 1, infix.length());
@@ -278,7 +296,7 @@ public class Converter {
 	 */
 	public void setNewInfix(String infix) {
 		this.infix = infix;
-		cleanInfix();
+		setupInfix();
 		insertStars();
 		generatePostfix();
 	}
@@ -380,4 +398,72 @@ public class Converter {
 		 */
 		return stack.pop();
 	}
+
+	// Turn off formatter
+	//@off
+	/*
+	 * TODO: Use token private class to represet numers/ops to handle negative numbers.
+	 */
+	/*
+	private class Token {
+		private Type type;
+		private Operator op;
+		private int value;
+
+		public Token(Operator op) {
+			this.op = op;
+			this.type = Type.OPERATOR;
+		}
+
+		public Token(int value) {
+			this.value = value;
+			this.type = Type.OPERAND;
+		}
+
+		public Type getType() {
+			return type;
+		}
+
+		public int getValue() throws Exception {
+			if (type == Type.OPERAND) {
+				return value;
+			} else {
+				throw new Exception();
+			}
+		}
+
+		public Operator getOperator() throws Exception {
+			if (type == Type.OPERATOR) {
+				return op;
+			} else {
+				throw new Exception();
+			}
+		}
+
+		public String toString() {
+			return (type == Type.OPERATOR) ? op.toString() : value + "";
+		}
+	}
+
+	enum Type {
+		OPERAND, OPERATOR
+	}
+
+	enum Operator {
+		MULT("*"), DIV("/"), ADD("+"), SUB("-");
+
+		private String op;
+
+		Operator(String op) {
+			this.op = op;
+		}
+
+		public String toString() {
+			return op;
+		}
+	}
+	*/
+	// Turn On formatter
+	 //@on
+
 }

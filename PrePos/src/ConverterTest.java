@@ -86,6 +86,48 @@ public class ConverterTest {
 		assertTrue(c.evaluate().equals("9"));
 		c.setNewInfix("1+1");
 		assertTrue(c.evaluate().equals("2"));
+	}
+
+	@Test
+	public void testDoesntBreakNumbersWithStars() {
+		Converter c = new Converter("12AB");
+
+		assertTrue(c.getInfix().equals("12*A*B"));
+
+		c.setNewInfix("A12B");
+
+		assertTrue(c.getInfix().equals("A*12*B"));
+
+		c.setNewInfix("AB12");
+
+		assertTrue(c.getInfix().equals("A*B*12"));
 
 	}
+
+	@Test
+	public void testDoesntBreakLargeNumbersWithStars() {
+		Converter c = new Converter("1234567890");
+
+		assertTrue(c.getInfix().equals("1234567890"));
+	}
+
+	/*
+	 * TODO: Fix evaluate function for large nums
+	 */
+
+	// Formatter off
+	//@off
+	/*
+	@Test
+	public void testEvaluateWithLargeNumbersNoBreakStars() {
+		Converter c = new Converter("1234567890-1234567890");
+
+		System.out.println(c.getInfix());
+		System.out.println(c.getPostfix());
+		System.out.println(c.evaluate());
+		assertTrue(c.evaluate().equals("0"));
+	}
+	*/
+	// Formatter on
+	//@on
 }
