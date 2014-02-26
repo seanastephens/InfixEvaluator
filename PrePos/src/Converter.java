@@ -271,6 +271,19 @@ public class Converter {
 	}
 
 	/**
+	 * Changes the instance infix expression to the given infix String.
+	 * 
+	 * @param infix
+	 *            - new instance infix expression.
+	 */
+	public void setNewInfix(String infix) {
+		this.infix = infix;
+		cleanInfix();
+		insertStars();
+		generatePostfix();
+	}
+
+	/**
 	 * Returns the instance postfix expression, generated from the instance
 	 * infix expression.
 	 * 

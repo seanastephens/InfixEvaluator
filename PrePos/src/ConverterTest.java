@@ -20,12 +20,26 @@ public class ConverterTest {
 	public void testConstructorAndGetterClearNonCharsAndInsertsStars() {
 		Converter c = new Converter("1+1 * 2 a/b3");
 		assertTrue(c.getInfix().equals("1+1*2*a/b*3"));
+	}
 
+	@Test
+	public void testSetterClearsNonCharsAndInsertsStars() {
+		Converter c = new Converter("");
+		assertTrue(c.getInfix().equals(""));
+		c.setNewInfix("1+1 * 2 a/b3");
+		assertTrue(c.getInfix().equals("1+1*2*a/b*3"));
 	}
 
 	@Test
 	public void testTwoOperandsAndOneOperator() {
 		Converter c = new Converter("1+1");
+		assertTrue(c.getPostfix().equals("11+"));
+	}
+
+	@Test
+	public void testTwoOperandsAndOneOperatorWithSetter() {
+		Converter c = new Converter("");
+		c.setNewInfix("1+1");
 		assertTrue(c.getPostfix().equals("11+"));
 	}
 
@@ -63,5 +77,15 @@ public class ConverterTest {
 	public void testBigEvaluateWithOnlyNumbers() {
 		Converter c = new Converter("1+2*3+4/5+(6-4)");
 		assertTrue(c.evaluate().equals("9"));
+	}
+
+	@Test
+	public void testEvaluateUsingSetter() {
+		Converter c = new Converter("");
+		c.setNewInfix("1+2*3+4/5+(6-4)");
+		assertTrue(c.evaluate().equals("9"));
+		c.setNewInfix("1+1");
+		assertTrue(c.evaluate().equals("2"));
+
 	}
 }
