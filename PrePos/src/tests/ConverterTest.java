@@ -1,6 +1,10 @@
+package tests;
+
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import core.Converter;
 
 /**
  * This class provides JUnit test methods for Converter.
@@ -76,7 +80,7 @@ public class ConverterTest {
 	@Test
 	public void testBigEvaluateWithOnlyNumbers() {
 		Converter c = new Converter("1+2*3+4/5+(6-4)");
-		assertTrue(c.evaluate().equals("9"));
+		assertTrue("9".equals(c.evaluate()));
 	}
 
 	@Test

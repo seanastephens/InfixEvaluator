@@ -1,3 +1,9 @@
+package core;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -85,14 +91,15 @@ public class Converter {
 			+ ALL_NON_OPERANDS;
 
 	/**
-	 * Private instance String used to represent the passed infix String.
+	 * Private instance list of tokens used to represent the passed infix
+	 * expression.
 	 */
-	private String infix;
-
+	private List<Token> infixExpression;
 	/**
-	 * Private instance String used to represent the generated postfix String.
+	 * Private instance list of tokens used to represent the generated postfix
+	 * expression.
 	 */
-	private String postfix;
+	private List<Token> postfixExpression;
 
 	/*
 	 * TODO: implement prefix operations
@@ -107,34 +114,46 @@ public class Converter {
 	 *            - infix expression to do operations on.
 	 */
 	public Converter(String infix) {
-		this.infix = infix;
-		setupInfix();
-		insertStars();
-		generatePostfix();
+		/*
+		 * Out-sourced infix setup to remove duplicate code.
+		 */
+		setNewInfix(infix);
 	}
 
 	/**
-	 * Private helper method that builds infixList.
+	 * Changes the instance infix expression to the given infix String.
+	 * 
+	 * @param infix
+	 *            - new instance infix expression.
+	 */
+	public void setNewInfix(String infix) {
+		infix = removeBadChars(infix);
+		infix = insertStars(infix);
+		infixExpression = tokenizeInfixString(infix);
+		postfixExpression = generatePostfix(infixExpression);
+
+	}
+
+	/**
+	 * Private helper method that removes bad characters from a String.
 	 * 
 	 * <p>
-	 * Generates Tokens and inserts
+	 * Bad characters are defined as those characters not in ALL_VALID_CHARS.
+	 * 
+	 * @param infix
+	 *            - String to be sanitized.
+	 * @return 'cleaned' String.
 	 */
-	private void setupInfix() {
+	private String removeBadChars(String infix) {
 		String cleanedInfix = "";
 
-		/*
-		 * If the character at index i in infix is a valid character, keep it.
-		 */
 		for (int i = 0; i < infix.length(); i++) {
-
 			if (ALL_VALID_CHARS.contains(infix.substring(i, i + 1))) {
-
 				cleanedInfix += infix.substring(i, i + 1);
-
 			}
 		}
 
-		this.infix = cleanedInfix;
+		return cleanedInfix;
 
 	}
 
@@ -142,31 +161,93 @@ public class Converter {
 	 * Private helper method that adds '*' between adjacent numbers or constants
 	 * in the infix expression.
 	 */
-	private void insertStars() {
+	private String insertStars(String infix) {
 
 		for (int i = 0; i < infix.length() - 1; i++) {
 
+			/*
+			 * Checks the combinations of characters that we should insert a
+			 * mult symbol between: 1A, A1, AB.
+			 */
 			if (NUMBERS.contains(infix.substring(i, i + 1))
-					&& VARIABLES.contains(infix.substring(i + 1, i + 2))) {
-
-				infix = infix.substring(0, i + 1) + "*"
-						+ infix.substring(i + 1, infix.length());
-			}
-
-			if (VARIABLES.contains(infix.substring(i, i + 1))
-					&& NUMBERS.contains(infix.substring(i + 1, i + 2))) {
-
-				infix = infix.substring(0, i + 1) + "*"
-						+ infix.substring(i + 1, infix.length());
-			}
-
-			if (VARIABLES.contains(infix.substring(i, i + 1))
+					&& VARIABLES.contains(infix.substring(i + 1, i + 2))
+					|| VARIABLES.contains(infix.substring(i, i + 1))
+					&& NUMBERS.contains(infix.substring(i + 1, i + 2))
+					|| VARIABLES.contains(infix.substring(i, i + 1))
 					&& VARIABLES.contains(infix.substring(i + 1, i + 2))) {
 
 				infix = infix.substring(0, i + 1) + "*"
 						+ infix.substring(i + 1, infix.length());
 			}
 		}
+
+		return infix;
+	}
+
+	/**
+	 * Private helper method that converts a String representing an infix
+	 * expression into a List of Tokens representing that same expression.
+	 * 
+	 * <p>
+	 * PRECONDITION: if insertStars() has not been run on the input for this
+	 * method, the list returned by this method will contain invalid operand
+	 * tokens.
+	 * 
+	 * @param infix
+	 *            - String representing infix expression.
+	 * @return List of Tokens equivalent to passed String.
+	 */
+	/*
+	 * Uses the following algorithm for tokenizing Strings:
+	 * 
+	 * for all curChar in String expression:
+	 * 
+	 * 1) If curChar not an operand, dump the queue into a new Token, then
+	 * Tokenize the operator.
+	 * 
+	 * 2) If curChar is an operand, add it to the queue.
+	 */
+	private List<Token> tokenizeInfixString(String infix) {
+		Queue<String> queue = new LinkedList<String>();
+		List<Token> exp = new ArrayList<Token>();
+
+		for (int i = 0; i < infix.length(); i++) {
+			String curChar = infix.substring(i, i + 1);
+
+			/*
+			 * If curChar not an operand, clear the queue into a new Token, then
+			 * Tokenize the operator.
+			 */
+			if (ALL_NON_OPERANDS.contains(curChar)) {
+				String temp = "";
+				while (!queue.isEmpty()) {
+					temp += queue.remove();
+				}
+				if (temp.length() > 0) {
+					exp.add(new Token(temp));
+				}
+				exp.add(new Token(curChar));
+
+				/*
+				 * If curChar is an operand, queue it.
+				 */
+			} else if (ALL_OPERANDS.contains(curChar)) {
+				queue.add(curChar);
+			}
+		}
+
+		/*
+		 * Clear queue if any chars remain
+		 */
+		String temp = "";
+		while (!queue.isEmpty()) {
+			temp += queue.remove();
+		}
+		if (temp.length() > 0) {
+			exp.add(new Token(temp));
+		}
+
+		return exp;
 	}
 
 	/**
@@ -199,29 +280,29 @@ public class Converter {
 	 * 
 	 * Finally, pop any remaining characters from the stack.
 	 */
-	private void generatePostfix() {
-		Stack<String> stack = new Stack<String>();
-		postfix = "";
+	private List<Token> generatePostfix(List<Token> infix) {
+		Stack<Token> stack = new Stack<Token>();
+		List<Token> exp = new ArrayList<Token>();
 
-		for (int i = 0; i < infix.length(); i++) {
+		for (int i = 0; i < infix.size(); i++) {
 
-			String curChar = infix.substring(i, i + 1);
+			Token current = infix.get(i);
 
 			/*
 			 * If the current character is an operand: add it to the end of the
 			 * postfix expression.
 			 */
-			if (ALL_OPERANDS.contains(curChar)) {
-				postfix += curChar;
+			if (current.isOperand()) {
+				exp.add(new Token(current.toString()));
 
-			} else if (ALL_NON_OPERANDS.contains(curChar)) {
+			} else {
 
 				/*
 				 * If the current character is a open parenthesis: push it onto
 				 * the stack.
 				 */
-				if (OPEN_CHARS.contains(curChar)) {
-					stack.push(curChar);
+				if (current.isOpenParenthesis()) {
+					stack.push(new Token(current.toString()));
 
 					/*
 					 * If the current character is a close parenthesis: pop from
@@ -229,23 +310,23 @@ public class Converter {
 					 * open parenthesis. Pop the open parenthesis, but do not
 					 * add it to the postfix expression.
 					 */
-				} else if (CLOSE_CHARS.contains(curChar)) {
+				} else if (current.isCloseParenthesis()) {
 					while (!stack.isEmpty()
-							&& !OPEN_CHARS.contains(stack.peek())) {
-						postfix += stack.pop();
+							&& !stack.peek().isOpenParenthesis()) {
+						exp.add(new Token(stack.pop().toString()));
 					}
 					stack.pop(); // pop open-parenthesis
 
 					/*
 					 * If the current character is an operator:
 					 */
-				} else if (ALL_OPERATORS.contains(curChar)) {
+				} else if (current.isOperator()) {
 
 					/*
 					 * If the stack is empty, push the operator onto the stack.
 					 */
 					if (stack.isEmpty()) {
-						stack.push(curChar);
+						stack.push(new Token(current.toString()));
 
 						/*
 						 * If the stack is not empty and the current operator
@@ -254,18 +335,18 @@ public class Converter {
 						 * the postfix expression, and push the current
 						 * character.
 						 */
-					} else if (LOW_PREF_OPS.contains(curChar)
-							&& HIGH_PREF_OPS.contains(stack.peek())) {
-						postfix += stack.pop();
-						stack.push(curChar);
+					} else if (current.isLowPrecedence()
+							&& stack.peek().isHighPrecedence()) {
+						exp.add(new Token(stack.pop().toString()));
+						stack.push(new Token(current.toString()));
 
 						/*
 						 * If the stack is not empty and the current operator
 						 * has the same precedence as the one on top of the
-						 * stack, push the current charcater onto the stack.
+						 * stack, push the current character onto the stack.
 						 */
 					} else {
-						stack.push(curChar);
+						stack.push(new Token(current.toString()));
 					}
 				}
 			}
@@ -274,9 +355,12 @@ public class Converter {
 		/*
 		 * Pop any remaining characters from the stack.
 		 */
+
 		while (!stack.isEmpty()) {
-			postfix += stack.pop();
+			exp.add(new Token(stack.pop().toString()));
 		}
+
+		return exp;
 	}
 
 	/**
@@ -285,20 +369,11 @@ public class Converter {
 	 * @return instance infix expression.
 	 */
 	public String getInfix() {
-		return infix;
-	}
-
-	/**
-	 * Changes the instance infix expression to the given infix String.
-	 * 
-	 * @param infix
-	 *            - new instance infix expression.
-	 */
-	public void setNewInfix(String infix) {
-		this.infix = infix;
-		setupInfix();
-		insertStars();
-		generatePostfix();
+		String temp = "";
+		for (int i = 0; i < infixExpression.size(); i++) {
+			temp += infixExpression.get(i).toString();
+		}
+		return temp;
 	}
 
 	/**
@@ -308,7 +383,11 @@ public class Converter {
 	 * @return instance postfix expression.
 	 */
 	public String getPostfix() {
-		return postfix;
+		String temp = "";
+		for (int i = 0; i < postfixExpression.size(); i++) {
+			temp += postfixExpression.get(i).toString();
+		}
+		return temp;
 	}
 
 	/**
@@ -339,46 +418,45 @@ public class Converter {
 	 */
 	public String evaluate() {
 
-		Stack<String> stack = new Stack<String>();
+		Stack<Token> stack = new Stack<Token>();
 
-		for (int i = 0; i < postfix.length(); i++) {
-			String curChar = postfix.substring(i, i + 1);
+		for (int i = 0; i < postfixExpression.size(); i++) {
+			Token current = postfixExpression.get(i);
 
 			/*
 			 * If the current character is an operand: push it onto the stack.
 			 */
-			if (ALL_OPERANDS.contains(curChar)) {
-				stack.push(curChar);
+			if (current.isOperand()) {
+				stack.push(new Token(current.toString()));
 
 				/*
 				 * If the current character is an operator: pop the top two
 				 * elements from the stack, apply the operator to them, and push
 				 * the result on the stack.
 				 */
-			} else if (ALL_OPERATORS.contains(curChar)) {
-				String secondOperand = stack.pop();
-				String firstOperand = stack.pop();
+			} else if (current.isOperator()) {
+				Token secondOperand = stack.pop();
+				Token firstOperand = stack.pop();
 
 				/*
 				 * If they are both numbers, we know how to deal with them.
 				 */
-				if (NUMBERS.contains(secondOperand)
-						&& NUMBERS.contains(firstOperand)) {
-					int aInt = Integer.valueOf(secondOperand);
-					int bInt = Integer.valueOf(firstOperand);
+				if (secondOperand.isNumber() && firstOperand.isNumber()) {
+					int aInt = Integer.valueOf(secondOperand.toString());
+					int bInt = Integer.valueOf(firstOperand.toString());
 					int result = 0;
 
-					if (curChar.equals("+")) {
+					if (current.toString().equals("+")) {
 						result = bInt + aInt;
-					} else if (curChar.equals("-")) {
+					} else if (current.toString().equals("-")) {
 						result = bInt - aInt;
-					} else if (curChar.equals("*")) {
+					} else if (current.toString().equals("*")) {
 						result = bInt * aInt;
-					} else if (curChar.equals("/")) {
+					} else if (current.toString().equals("/")) {
 						result = bInt / aInt;
 					}
 
-					stack.push(String.valueOf(result));
+					stack.push(new Token(String.valueOf(result)));
 				} else {
 					/*
 					 * TODO: Deal with non-numbers in evaluate. Figure out a
@@ -386,7 +464,8 @@ public class Converter {
 					 * just push them back on the stack and it clogs up the
 					 * whole alg.
 					 */
-					stack.push(secondOperand + curChar + firstOperand);
+					stack.push(new Token(secondOperand + current.toString()
+							+ firstOperand));
 				}
 			}
 		}
@@ -396,74 +475,6 @@ public class Converter {
 		 * 
 		 * TODO: figure out stacks with non-numbers remaining.
 		 */
-		return stack.pop();
+		return stack.pop().toString();
 	}
-
-	// Turn off formatter
-	//@off
-	/*
-	 * TODO: Use token private class to represet numers/ops to handle negative numbers.
-	 */
-	/*
-	private class Token {
-		private Type type;
-		private Operator op;
-		private int value;
-
-		public Token(Operator op) {
-			this.op = op;
-			this.type = Type.OPERATOR;
-		}
-
-		public Token(int value) {
-			this.value = value;
-			this.type = Type.OPERAND;
-		}
-
-		public Type getType() {
-			return type;
-		}
-
-		public int getValue() throws Exception {
-			if (type == Type.OPERAND) {
-				return value;
-			} else {
-				throw new Exception();
-			}
-		}
-
-		public Operator getOperator() throws Exception {
-			if (type == Type.OPERATOR) {
-				return op;
-			} else {
-				throw new Exception();
-			}
-		}
-
-		public String toString() {
-			return (type == Type.OPERATOR) ? op.toString() : value + "";
-		}
-	}
-
-	enum Type {
-		OPERAND, OPERATOR
-	}
-
-	enum Operator {
-		MULT("*"), DIV("/"), ADD("+"), SUB("-");
-
-		private String op;
-
-		Operator(String op) {
-			this.op = op;
-		}
-
-		public String toString() {
-			return op;
-		}
-	}
-	*/
-	// Turn On formatter
-	 //@on
-
 }
