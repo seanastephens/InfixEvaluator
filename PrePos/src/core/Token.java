@@ -32,7 +32,7 @@ public class Token {
 
 	public Token(String exp) {
 		if ("".equals(exp)) {
-			throw new EmptySymbolException();
+			throw new EmptyTokenException();
 		}
 		this.exp = exp;
 		if ("*/+-".contains(exp)) {

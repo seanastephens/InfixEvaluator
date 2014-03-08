@@ -6,9 +6,9 @@ package core;
  * 
  */
 @SuppressWarnings("serial")
-public class EmptySymbolException extends RuntimeException {
+public class EmptyTokenException extends RuntimeException {
 
-	public EmptySymbolException() {
+	public EmptyTokenException() {
 		super("Tried to construct Token with empty symbol.");
 	}
 }

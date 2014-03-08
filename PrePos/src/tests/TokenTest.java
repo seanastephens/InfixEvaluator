@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import core.EmptySymbolException;
+import core.EmptyTokenException;
 import core.Token;
 
 public class TokenTest {
@@ -144,7 +144,7 @@ public class TokenTest {
 		assertTrue(ye4.isNumber());
 	}
 
-	@Test(expected = EmptySymbolException.class)
+	@Test(expected = EmptyTokenException.class)
 	public void testExceptionOnEmptyString() {
 		@SuppressWarnings("unused")
 		Token t = new Token("");
