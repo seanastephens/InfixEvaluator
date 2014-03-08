@@ -16,7 +16,7 @@ import java.util.Stack;
  * infix expression after construction. class cannot convert from postfix to
  * infix. class does not support prefix notation.
  * 
- * @author Sean Stephens - seanastephens@email.arizona.edu
+ * @author Sean Stephens, seanastephens@email.arizona.edu
  * 
  */
 public class Converter {
@@ -128,9 +128,15 @@ public class Converter {
 	 */
 	public void setNewInfix(String infix) {
 		infix = removeBadChars(infix);
+		// System.out.println("1: " + infix);
 		infix = insertStars(infix);
+		// System.out.println("2: " + infix);
 		infixExpression = tokenizeInfixString(infix);
+		// System.out.println("3: " + infixExpression);
+		infixExpression = cleanNegativeNumbers(infixExpression);
+		// System.out.println("4: " + infixExpression);
 		postfixExpression = generatePostfix(infixExpression);
+		// System.out.println("5: " + postfixExpression);
 
 	}
 
@@ -248,6 +254,67 @@ public class Converter {
 		}
 
 		return exp;
+	}
+
+	/**
+	 * Private helper method that cleans up an infix token sequences with
+	 * negative signs.
+	 * 
+	 * <p>
+	 * Converts <MINUS><NUMBER> to <PLUS><-1*NUMBER>.
+	 * 
+	 * @param infix
+	 *            - List of Tokens in infix format.
+	 * @return List of Tokens in infix format with above processing applied.
+	 */
+
+	private List<Token> cleanNegativeNumbers(List<Token> infix) {
+		for (int i = 0; i < infix.size() - 1; i++) {
+			if (infix.get(i).isOperator()
+					&& infix.get(i).toString().equals("+")
+					&& infix.get(i + 1).isOperator()
+					&& infix.get(i + 1).toString().equals("+")) {
+				infix.remove(i);
+			}
+		}
+
+		for (int i = 0; i < infix.size() - 1; i++) {
+			if (infix.get(i).isOperator()
+					&& infix.get(i).toString().equals("-")
+					&& infix.get(i + 1).isOperand()) {
+				infix.remove(i);
+				infix.set(i, new Token("-" + infix.get(i).toString()));
+				infix.add(i, new Token("+"));
+			}
+		}
+
+		for (int i = 0; i < infix.size() - 1; i++) {
+			if (infix.get(i).isOperator()
+					&& infix.get(i).toString().equals("+")
+					&& infix.get(i + 1).isOperator()
+					&& infix.get(i + 1).toString().equals("+")) {
+				infix.remove(i);
+			}
+		}
+
+		for (int i = 0; i < infix.size() - 1; i++) {
+			if (infix.get(i).isOpenParenthesis()
+					&& infix.get(i + 1).isOperator()
+					&& infix.get(i + 1).toString().equals("+")) {
+				infix.remove(i + 1);
+			}
+		}
+
+		for (int i = 0; i < infix.size() - 2; i++) {
+			if (infix.get(i).isOpenParenthesis()
+					&& infix.get(i + 2).isCloseParenthesis()) {
+				infix.remove(i + 2);
+				infix.remove(i);
+			}
+		}
+
+		return infix;
+
 	}
 
 	/**
@@ -371,7 +438,15 @@ public class Converter {
 	public String getInfix() {
 		String temp = "";
 		for (int i = 0; i < infixExpression.size(); i++) {
-			temp += infixExpression.get(i).toString();
+			if (infixExpression.get(i).isOperand()
+					&& infixExpression.get(i).isNumber()
+					&& infixExpression.get(i).toString().contains("-")) {
+				temp += "(";
+				temp += infixExpression.get(i).toString();
+				temp += ")";
+			} else {
+				temp += infixExpression.get(i).toString();
+			}
 		}
 		return temp;
 	}

@@ -32,7 +32,7 @@ public class Token {
 
 	public Token(String exp) {
 		if ("".equals(exp)) {
-			throw new EmptySymbolException("Empty Token");
+			throw new EmptySymbolException();
 		}
 		this.exp = exp;
 		if ("*/+-".contains(exp)) {
@@ -49,17 +49,22 @@ public class Token {
 		}
 
 		isOperand = true;
-		for (int i = 0; i < exp.length(); i++) {
-			if (!ALL_OPERANDS.contains(exp.substring(i, i + 1))) {
-				isOperand = false;
-			}
-		}
-
-		if (isOperand) {
-			isNumber = true;
+		if (isOperator) {
+			isOperand = false;
+			isNumber = false;
+		} else {
 			for (int i = 0; i < exp.length(); i++) {
-				if (!NUMBERS.contains(exp.substring(i, i + 1))) {
-					isNumber = false;
+				if (!(ALL_OPERANDS + "-").contains(exp.substring(i, i + 1))) {
+					isOperand = false;
+				}
+			}
+
+			if (isOperand) {
+				isNumber = true;
+				for (int i = 0; i < exp.length(); i++) {
+					if (!(NUMBERS + "-").contains(exp.substring(i, i + 1))) {
+						isNumber = false;
+					}
 				}
 			}
 		}

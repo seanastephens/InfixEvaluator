@@ -115,23 +115,17 @@ public class ConverterTest {
 		assertTrue(c.getInfix().equals("1234567890"));
 	}
 
-	/*
-	 * TODO: Fix evaluate function for large nums
-	 */
-
-	// Formatter off
-	//@off
-	/*
 	@Test
 	public void testEvaluateWithLargeNumbersNoBreakStars() {
 		Converter c = new Converter("1234567890-1234567890");
-
-		System.out.println(c.getInfix());
-		System.out.println(c.getPostfix());
-		System.out.println(c.evaluate());
 		assertTrue(c.evaluate().equals("0"));
 	}
-	*/
-	// Formatter on
-	//@on
+
+	@Test
+	public void testParsesNegativeNumbers() {
+		Converter c = new Converter("1+(-1)");
+		assertTrue("1+(-1)".equals(c.getInfix()));
+		assertTrue("1-1+".equals(c.getPostfix()));
+		assertTrue("0".equals(c.evaluate()));
+	}
 }

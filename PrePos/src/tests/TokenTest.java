@@ -17,12 +17,6 @@ public class TokenTest {
 	}
 
 	@Test
-	public void testConstructorAndToStringWithEmpty() {
-		Token t = new Token("");
-		assertTrue("".equals(t.toString()));
-	}
-
-	@Test
 	public void testIsOperator() {
 		Token no1 = new Token("k");
 		Token no2 = new Token("1");
@@ -137,6 +131,8 @@ public class TokenTest {
 	public void testIsNumber() {
 		Token ye1 = new Token("1");
 		Token ye2 = new Token("180");
+		Token ye3 = new Token("-1");
+		Token ye4 = new Token("-180");
 		Token no1 = new Token("a");
 		Token no2 = new Token("Z");
 
@@ -144,10 +140,13 @@ public class TokenTest {
 		assertFalse(no2.isNumber());
 		assertTrue(ye1.isNumber());
 		assertTrue(ye2.isNumber());
+		assertTrue(ye3.isNumber());
+		assertTrue(ye4.isNumber());
 	}
 
 	@Test(expected = EmptySymbolException.class)
 	public void testExceptionOnEmptyString() {
+		@SuppressWarnings("unused")
 		Token t = new Token("");
 	}
 }
