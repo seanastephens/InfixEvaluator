@@ -2,17 +2,15 @@
 PostfixPrefix
 =============
 
-Java Class for converting postfix, infix, and prefix expressions, and evaluating them.
+This project contains static java classes for converting infix expressions to postfix expressions, and for evaluation postifx expressions.
 
 <p>
 EXAMPLE:
 ```
-Converter c = new Converter("1+2*3");
+String infix = "1+2*3";
 
-c.getInfix();           // "1+2*3"
+String postfix = InfixToPostfix.convert(infix);   // "123*+"
 
-c.getPostfix();         // "123*+"
-
-c.evaluate();           // "7"
+PostfixEvaluator.evaluate(postfix);               // "7"
 ```
 </html>
