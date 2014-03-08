@@ -4,22 +4,9 @@ public class Token {
 
 	/**
 	 * String constant consisting of all the characters that will be parsed to
-	 * represent variables.
-	 */
-	public static final String VARIABLES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-			+ "abcdefghijklmnopqrstuvwxyz";
-
-	/**
-	 * String constant consisting of all the characters that will be parsed to
 	 * represent numbers.
 	 */
 	public static final String NUMBERS = "0123456789";
-
-	/**
-	 * String constant consisting of all the characters that will be parsed as
-	 * operands.
-	 */
-	public static final String ALL_OPERANDS = NUMBERS + VARIABLES;
 
 	private String exp;
 	private boolean isOperator;
@@ -54,7 +41,7 @@ public class Token {
 			isNumber = false;
 		} else {
 			for (int i = 0; i < exp.length(); i++) {
-				if (!(ALL_OPERANDS + "-").contains(exp.substring(i, i + 1))) {
+				if (!(NUMBERS + "-").contains(exp.substring(i, i + 1))) {
 					isOperand = false;
 				}
 			}
