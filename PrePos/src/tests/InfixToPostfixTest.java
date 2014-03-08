@@ -247,4 +247,6 @@ public class InfixToPostfixTest {
 					.get(i).toString());
 		}
 	}
+
+	// TODO: Write tests that include parentheses.
 }

@@ -181,9 +181,9 @@ public class InfixToPostfix {
 				exp.add(new Token(curChar));
 
 				/*
-				 * If curChar is an operand, queue it.
+				 * Otherwise, curChar is an operand, queue it.
 				 */
-			} else if (ALL_OPERANDS.contains(curChar)) {
+			} else {
 				queue.add(curChar);
 			}
 		}
