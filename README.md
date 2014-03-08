@@ -9,8 +9,8 @@ EXAMPLE:
 ```
 String infix = "1+2*3";
 
-String postfix = InfixToPostfix.convert(infix);   // "123*+"
+List<Token> postfix = InfixToPostfix.convert(infix);   // [<1>, <2>, <3>, <*>, <+>]
 
-PostfixEvaluator.evaluate(postfix);               // "7"
+PostfixEvaluator.evaluate(postfix);                    // "7"
 ```
 </html>
