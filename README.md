@@ -1,5 +1,5 @@
 <html>
-PostfixPrefix
+InfixEvaluator
 =============
 
 This project contains static java classes for converting infix expressions to postfix expressions, and for evaluating postifx expressions.
