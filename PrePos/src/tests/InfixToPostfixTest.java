@@ -250,7 +250,6 @@ public class InfixToPostfixTest {
 		}
 	}
 
-	// TODO: Write tests that include parentheses.
 	@Test
 	public void testParenthesesAffectOrderOfOps() {
 		String infix = "1+2*3";

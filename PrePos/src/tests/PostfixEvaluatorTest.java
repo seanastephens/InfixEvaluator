@@ -86,5 +86,23 @@ public class PostfixEvaluatorTest {
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
-	// TODO: Write tests that include parentheses.
+	@Test
+	public void testParentheseAffectOutCome() {
+		String infix = "1+2*3";
+		String infix2 = "(1+2)*3";
+		assertEquals(7,
+				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
+		assertEquals(9,
+				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix2)));
+	}
+
+	@Test
+	public void testNestedParenthese() {
+		String infix = "1+2*3-4*3+2*3-2";
+		String infix2 = "(1+2*(3-4)*(3+2))*3-2";
+		assertEquals(-1,
+				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
+		assertEquals(-29,
+				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix2)));
+	}
 }
