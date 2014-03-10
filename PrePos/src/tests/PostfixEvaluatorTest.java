@@ -105,4 +105,11 @@ public class PostfixEvaluatorTest {
 		assertEquals(-29,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix2)));
 	}
+
+	@Test
+	public void testMoreThanOneDigit() {
+		String infix = "1111+2222-3333";
+		assertEquals(0,
+				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
+	}
 }

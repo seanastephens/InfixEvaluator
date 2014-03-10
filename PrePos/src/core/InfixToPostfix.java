@@ -107,7 +107,8 @@ public class InfixToPostfix {
 		String postfix = "";
 		for (Token t : postfixExpression) {
 			if (t.isOperand()) {
-				if (Integer.parseInt(t.toString()) < 0) {
+				if (Integer.parseInt(t.toString()) < 0
+						|| Integer.parseInt(t.toString()) >= 10) {
 					postfix += "(" + t.toString() + ")";
 				} else {
 					postfix += t.toString();

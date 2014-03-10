@@ -391,4 +391,28 @@ public class InfixToPostfixTest {
 
 		assertEquals(postfix, InfixToPostfix.convertToString(infix));
 	}
+
+	@Test
+	public void testCanHandleTwoDigitNumbers() {
+		String infix = "1111+2222-3333";
+		String postfix = "(1111)(2222)(-3333)++";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+
+		List<Token> expectedExpression = new ArrayList<Token>();
+		expectedExpression.add(new Token("1111"));
+		expectedExpression.add(new Token("2222"));
+		expectedExpression.add(new Token("-3333"));
+		expectedExpression.add(PLUS);
+		expectedExpression.add(PLUS);
+
+		List<Token> actualExpression = InfixToPostfix.convert(infix);
+
+		assertEquals(expectedExpression.size(), actualExpression.size());
+
+		for (int i = 0; i < expectedExpression.size(); i++) {
+			assertEquals(expectedExpression.get(i).toString(), actualExpression
+					.get(i).toString());
+		}
+	}
 }
