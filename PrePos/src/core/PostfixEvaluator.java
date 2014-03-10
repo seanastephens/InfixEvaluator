@@ -66,11 +66,9 @@ public class PostfixEvaluator {
 
 				if (current.toString().equals("+")) {
 					result = bInt + aInt;
-				} else if (current.toString().equals("-")) {
-					result = bInt - aInt;
 				} else if (current.toString().equals("*")) {
 					result = bInt * aInt;
-				} else if (current.toString().equals("/")) {
+				} else {
 					result = bInt / aInt;
 				}
 

@@ -106,7 +106,7 @@ public class InfixToPostfix {
 
 		String postfix = "";
 		for (Token t : postfixExpression) {
-			if (t.isNumber()) {
+			if (t.isOperand()) {
 				if (Integer.parseInt(t.toString()) < 0) {
 					postfix += "(" + t.toString() + ")";
 				} else {
@@ -198,7 +198,6 @@ public class InfixToPostfix {
 		if (temp.length() > 0) {
 			exp.add(new Token(temp));
 		}
-
 		return exp;
 	}
 
@@ -215,8 +214,6 @@ public class InfixToPostfix {
 	 * 
 	 * 3. Removes parentheses around single operands: (2) --> 2
 	 * 
-	 * 4. Convert duplicate pluses to single pluses: ++ --> +
-	 * 
 	 * @param infix
 	 *            - List of Tokens in infix format.
 	 * @return List of Tokens in infix format with above processing applied.
@@ -228,8 +225,7 @@ public class InfixToPostfix {
 		 * Converts minus-operand pairs to plus-operand pairs. -2 --> +<-2>
 		 */
 		for (int i = 0; i < infix.size() - 1; i++) {
-			if (infix.get(i).isOperator()
-					&& infix.get(i).toString().equals("-")
+			if (infix.get(i).toString().equals("-")
 					&& infix.get(i + 1).isOperand()) {
 				infix.remove(i);
 				infix.set(i, new Token("-" + infix.get(i).toString()));
@@ -243,10 +239,16 @@ public class InfixToPostfix {
 		 */
 		for (int i = 0; i < infix.size() - 1; i++) {
 			if (infix.get(i).isOpenParenthesis()
-					&& infix.get(i + 1).isOperator()
 					&& infix.get(i + 1).toString().equals("+")) {
 				infix.remove(i + 1);
 			}
+		}
+
+		/*
+		 * Handles an edge case of a single negative number.
+		 */
+		if (infix.get(0).toString().equals("+")) {
+			infix.remove(0);
 		}
 
 		/*
@@ -256,18 +258,6 @@ public class InfixToPostfix {
 			if (infix.get(i).isOpenParenthesis()
 					&& infix.get(i + 2).isCloseParenthesis()) {
 				infix.remove(i + 2);
-				infix.remove(i);
-			}
-		}
-
-		/*
-		 * Convert duplicate pluses to single pluses: ++ --> +
-		 */
-		for (int i = 0; i < infix.size() - 1; i++) {
-			if (infix.get(i).isOperator()
-					&& infix.get(i).toString().equals("+")
-					&& infix.get(i + 1).isOperator()
-					&& infix.get(i + 1).toString().equals("+")) {
 				infix.remove(i);
 			}
 		}
@@ -335,8 +325,7 @@ public class InfixToPostfix {
 					 * add it to the postfix expression.
 					 */
 				} else if (current.isCloseParenthesis()) {
-					while (!stack.isEmpty()
-							&& !stack.peek().isOpenParenthesis()) {
+					while (!stack.peek().isOpenParenthesis()) {
 						exp.add(new Token(stack.pop().toString()));
 					}
 					stack.pop(); // pop open-parenthesis
@@ -344,7 +333,7 @@ public class InfixToPostfix {
 					/*
 					 * If the current character is an operator:
 					 */
-				} else if (current.isOperator()) {
+				} else {
 
 					/*
 					 * If the stack is empty, push the operator onto the stack.

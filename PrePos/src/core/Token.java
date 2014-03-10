@@ -6,7 +6,7 @@ public class Token {
 	 * String constant consisting of all the characters that will be parsed to
 	 * represent numbers.
 	 */
-	public static final String NUMBERS = "-0123456789";
+	public static final String NUMBERS = "0123456789";
 
 	private String exp;
 	private boolean isOperator;
@@ -14,11 +14,11 @@ public class Token {
 	private boolean isOpenParenthesis;
 	private boolean isCloseParenthesis;
 	private boolean isHighPrecedence;
-	private boolean isNumber;
 
-	public Token(String exp) {
+	public Token(String exp) throws TokenException {
 		if (exp.length() == 0) {
-			throw new EmptyTokenException();
+			throw new TokenException(
+					"Tried to construct Token with empty symbol.");
 		}
 		this.exp = exp;
 		if ("*/+-".contains(exp)) {
@@ -32,37 +32,28 @@ public class Token {
 			isOperator = false;
 		}
 
-		isOperand = true;
-		if (isOperator) {
-			isOperand = false;
-			isNumber = false;
-		} else {
-			for (int i = 0; i < exp.length(); i++) {
-				if (!(NUMBERS + "-").contains(exp.substring(i, i + 1))) {
-					isOperand = false;
-				}
-			}
-
-			if (isOperand) {
-				isNumber = true;
-				for (int i = 0; i < exp.length(); i++) {
-					if (!NUMBERS.contains(exp.substring(i, i + 1))) {
-						isNumber = false;
-					}
-				}
-			}
-		}
-
 		if ("(".equals(exp)) {
 			isOpenParenthesis = true;
 		} else {
 			isOpenParenthesis = false;
 		}
-
 		if (")".equals(exp)) {
 			isCloseParenthesis = true;
 		} else {
 			isCloseParenthesis = false;
+		}
+
+		if (!isOperator && !isOpenParenthesis && !isCloseParenthesis) {
+			for (int i = 0; i < exp.length(); i++) {
+				if (!(NUMBERS + "-").contains(exp.substring(i, i + 1))) {
+					throw new TokenException(
+							"Tried to construct a Token with an invalid character sequence : "
+									+ exp);
+				}
+			}
+			isOperand = true;
+		} else {
+			isOperand = false;
 		}
 	}
 
@@ -92,9 +83,5 @@ public class Token {
 
 	public boolean isHighPrecedence() {
 		return isHighPrecedence;
-	}
-
-	public boolean isNumber() {
-		return isNumber;
 	}
 }

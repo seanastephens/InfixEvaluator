@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import core.EmptyTokenException;
 import core.Token;
+import core.TokenException;
 
 public class TokenTest {
 
@@ -127,26 +127,21 @@ public class TokenTest {
 		assertTrue(ye2.isHighPrecedence());
 	}
 
-	@Test
-	public void testIsNumber() {
-		Token ye1 = new Token("1");
-		Token ye2 = new Token("180");
-		Token ye3 = new Token("-1");
-		Token ye4 = new Token("-180");
-		Token no1 = new Token("*");
-		Token no2 = new Token("/");
-
-		assertFalse(no1.isNumber());
-		assertFalse(no2.isNumber());
-		assertTrue(ye1.isNumber());
-		assertTrue(ye2.isNumber());
-		assertTrue(ye3.isNumber());
-		assertTrue(ye4.isNumber());
-	}
-
-	@Test(expected = EmptyTokenException.class)
+	@Test(expected = TokenException.class)
 	public void testExceptionOnEmptyString() {
 		@SuppressWarnings("unused")
 		Token t = new Token("");
+	}
+
+	@Test(expected = TokenException.class)
+	public void testExceptionOnLetterString() {
+		@SuppressWarnings("unused")
+		Token t = new Token("A");
+	}
+
+	@Test(expected = TokenException.class)
+	public void testExceptionOnBadString() {
+		@SuppressWarnings("unused")
+		Token t = new Token("$");
 	}
 }

@@ -25,7 +25,9 @@ public class InfixToPostfixTest {
 	Token THREE = new Token("3");
 	Token MTHREE = new Token("-3");
 	Token FOUR = new Token("4");
+	Token MFOUR = new Token("-4");
 	Token FIVE = new Token("5");
+	Token MFIVE = new Token("-5");
 	Token PLUS = new Token("+");
 	Token MINUS = new Token("-");
 	Token MULT = new Token("*");
@@ -249,4 +251,145 @@ public class InfixToPostfixTest {
 	}
 
 	// TODO: Write tests that include parentheses.
+	@Test
+	public void testParenthesesAffectOrderOfOps() {
+		String infix = "1+2*3";
+		String postfix = "123*+";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+
+		List<Token> expectedExpression = new ArrayList<Token>();
+		expectedExpression.add(ONE);
+		expectedExpression.add(TWO);
+		expectedExpression.add(THREE);
+		expectedExpression.add(MULT);
+		expectedExpression.add(PLUS);
+
+		List<Token> actualExpression = InfixToPostfix.convert(infix);
+
+		assertEquals(expectedExpression.size(), actualExpression.size());
+
+		for (int i = 0; i < expectedExpression.size(); i++) {
+			assertEquals(expectedExpression.get(i).toString(), actualExpression
+					.get(i).toString());
+		}
+
+		String infix2 = "(1+2)*3";
+		String postfix2 = "12+3*";
+
+		assertEquals(postfix2, InfixToPostfix.convertToString(infix2));
+
+		List<Token> expectedExpression2 = new ArrayList<Token>();
+		expectedExpression2.add(ONE);
+		expectedExpression2.add(TWO);
+		expectedExpression2.add(PLUS);
+		expectedExpression2.add(THREE);
+		expectedExpression2.add(MULT);
+
+		List<Token> actualExpression2 = InfixToPostfix.convert(infix2);
+
+		assertEquals(expectedExpression2.size(), actualExpression2.size());
+
+		for (int i = 0; i < expectedExpression2.size(); i++) {
+			assertEquals(expectedExpression2.get(i).toString(),
+					actualExpression2.get(i).toString());
+		}
+	}
+
+	@Test
+	public void testNestedParentheses() {
+		String infix = "1+2*3-4*3+2*3-2";
+		String postfix = "123*(-4)3*23*(-2)++++";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+
+		List<Token> expectedExpression = new ArrayList<Token>();
+		expectedExpression.add(ONE);
+		expectedExpression.add(TWO);
+		expectedExpression.add(THREE);
+		expectedExpression.add(MULT);
+		expectedExpression.add(MFOUR);
+		expectedExpression.add(THREE);
+		expectedExpression.add(MULT);
+		expectedExpression.add(TWO);
+		expectedExpression.add(THREE);
+		expectedExpression.add(MULT);
+		expectedExpression.add(MTWO);
+		expectedExpression.add(PLUS);
+		expectedExpression.add(PLUS);
+		expectedExpression.add(PLUS);
+		expectedExpression.add(PLUS);
+
+		List<Token> actualExpression = InfixToPostfix.convert(infix);
+
+		assertEquals(expectedExpression.size(), actualExpression.size());
+
+		for (int i = 0; i < expectedExpression.size(); i++) {
+			assertEquals(expectedExpression.get(i).toString(), actualExpression
+					.get(i).toString());
+		}
+
+		String infix2 = "(1+2*(3-4)*(3+2))*3-2";
+		String postfix2 = "123(-4)+32+**+3*(-2)+";
+
+		assertEquals(postfix2, InfixToPostfix.convertToString(infix2));
+
+		List<Token> expectedExpression2 = new ArrayList<Token>();
+		expectedExpression2.add(ONE);
+		expectedExpression2.add(TWO);
+		expectedExpression2.add(THREE);
+		expectedExpression2.add(MFOUR);
+		expectedExpression2.add(PLUS);
+		expectedExpression2.add(THREE);
+		expectedExpression2.add(TWO);
+		expectedExpression2.add(PLUS);
+		expectedExpression2.add(MULT);
+		expectedExpression2.add(MULT);
+		expectedExpression2.add(PLUS);
+		expectedExpression2.add(THREE);
+		expectedExpression2.add(MULT);
+		expectedExpression2.add(MTWO);
+		expectedExpression2.add(PLUS);
+
+		List<Token> actualExpression2 = InfixToPostfix.convert(infix2);
+
+		assertEquals(expectedExpression2.size(), actualExpression2.size());
+
+		for (int i = 0; i < expectedExpression2.size(); i++) {
+			assertEquals(expectedExpression2.get(i).toString(),
+					actualExpression2.get(i).toString());
+		}
+	}
+
+	@Test
+	public void testWrapsNegatives() {
+		String infix = "-2";
+		String postfix = "(-2)";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+	}
+
+	@Test
+	public void testCleansParentheses() {
+		String infix = "((-2))";
+		String postfix = "(-2)";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+	}
+
+	@Test
+	public void testCleansDoublePlus() {
+		String infix = "1+(-2)";
+		String postfix = "1(-2)+";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+	}
+
+	@Test
+	public void testCanHandleSpaces() {
+		String infix = "1 + ( -2 )";
+		String postfix = "1(-2)+";
+
+		assertEquals(postfix, InfixToPostfix.convertToString(infix));
+	}
 }
