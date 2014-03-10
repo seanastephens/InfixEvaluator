@@ -12,16 +12,16 @@ public class TokenTest {
 
 	@Test
 	public void testConstructorAndToString() {
-		Token t = new Token("abc");
-		assertTrue("abc".equals(t.toString()));
+		Token t = new Token("123");
+		assertTrue("123".equals(t.toString()));
 	}
 
 	@Test
 	public void testIsOperator() {
-		Token no1 = new Token("k");
-		Token no2 = new Token("1");
-		Token no3 = new Token("A");
-		Token no4 = new Token("a");
+		Token no1 = new Token("1");
+		Token no2 = new Token("111");
+		Token no3 = new Token("-12");
+		Token no4 = new Token("0");
 		Token no5 = new Token(")");
 		Token ye1 = new Token("*");
 		Token ye2 = new Token("/");
@@ -43,10 +43,10 @@ public class TokenTest {
 
 	@Test
 	public void testIsOperand() {
-		Token ye1 = new Token("k");
+		Token ye1 = new Token("1001");
 		Token ye2 = new Token("1");
-		Token ye3 = new Token("A");
-		Token ye4 = new Token("a");
+		Token ye3 = new Token("-12");
+		Token ye4 = new Token("-123");
 
 		Token no1 = new Token("*");
 		Token no2 = new Token("/");
@@ -70,8 +70,8 @@ public class TokenTest {
 	public void testIsOpenParenthesis() {
 		Token no1 = new Token("*");
 		Token no2 = new Token("1");
-		Token no3 = new Token("A");
-		Token no4 = new Token("a");
+		Token no3 = new Token("-12");
+		Token no4 = new Token("0");
 		Token no5 = new Token(")");
 		Token yes = new Token("(");
 
@@ -88,8 +88,8 @@ public class TokenTest {
 	public void testIsCloseParenthesis() {
 		Token no1 = new Token("*");
 		Token no2 = new Token("1");
-		Token no3 = new Token("A");
-		Token no4 = new Token("a");
+		Token no3 = new Token("-123");
+		Token no4 = new Token("0");
 		Token no5 = new Token("(");
 		Token yes = new Token(")");
 
@@ -133,8 +133,8 @@ public class TokenTest {
 		Token ye2 = new Token("180");
 		Token ye3 = new Token("-1");
 		Token ye4 = new Token("-180");
-		Token no1 = new Token("a");
-		Token no2 = new Token("Z");
+		Token no1 = new Token("*");
+		Token no2 = new Token("/");
 
 		assertFalse(no1.isNumber());
 		assertFalse(no2.isNumber());

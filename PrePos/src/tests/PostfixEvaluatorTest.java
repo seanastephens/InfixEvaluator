@@ -32,21 +32,21 @@ public class PostfixEvaluatorTest {
 	@Test
 	public void testPlusSubtractMultDiv() {
 		String infix = "1+2-3*4/5";
-		assertEquals("3",
+		assertEquals(3,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testPlusSubtractDivMult() {
 		String infix = "1+2-3/4*5";
-		assertEquals("3",
+		assertEquals(3,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testSubtractPlusMultDiv() {
 		String infix = "1-2+3*4/5";
-		assertEquals("-1",
+		assertEquals(-1,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
@@ -54,35 +54,35 @@ public class PostfixEvaluatorTest {
 	public void testSubtractPlusDivMult() {
 
 		String infix = "1-2+3/4*5";
-		assertEquals("-1",
+		assertEquals(-1,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testMultiplePlus() {
 		String infix = "1+1+1+1";
-		assertEquals("4",
+		assertEquals(4,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testMultipleSubtract() {
 		String infix = "1-1-1-1";
-		assertEquals("-2",
+		assertEquals(-2,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testMultipleMult() {
 		String infix = "1*1*1*1";
-		assertEquals("1",
+		assertEquals(1,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 
 	@Test
 	public void testMultipleDiv() {
 		String infix = "1/1/1/1";
-		assertEquals("1",
+		assertEquals(1,
 				PostfixEvaluator.evaluate(InfixToPostfix.convert(infix)));
 	}
 

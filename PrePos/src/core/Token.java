@@ -6,29 +6,26 @@ public class Token {
 	 * String constant consisting of all the characters that will be parsed to
 	 * represent numbers.
 	 */
-	public static final String NUMBERS = "0123456789";
+	public static final String NUMBERS = "-0123456789";
 
 	private String exp;
 	private boolean isOperator;
 	private boolean isOperand;
 	private boolean isOpenParenthesis;
 	private boolean isCloseParenthesis;
-	private boolean isLowPrecedence;
 	private boolean isHighPrecedence;
 	private boolean isNumber;
 
 	public Token(String exp) {
-		if ("".equals(exp)) {
+		if (exp.length() == 0) {
 			throw new EmptyTokenException();
 		}
 		this.exp = exp;
 		if ("*/+-".contains(exp)) {
 			isOperator = true;
 			if ("*/".contains(exp)) {
-				isLowPrecedence = false;
 				isHighPrecedence = true;
 			} else {
-				isLowPrecedence = true;
 				isHighPrecedence = false;
 			}
 		} else {
@@ -49,20 +46,20 @@ public class Token {
 			if (isOperand) {
 				isNumber = true;
 				for (int i = 0; i < exp.length(); i++) {
-					if (!(NUMBERS + "-").contains(exp.substring(i, i + 1))) {
+					if (!NUMBERS.contains(exp.substring(i, i + 1))) {
 						isNumber = false;
 					}
 				}
 			}
 		}
 
-		if ("(".contains(exp)) {
+		if ("(".equals(exp)) {
 			isOpenParenthesis = true;
 		} else {
 			isOpenParenthesis = false;
 		}
 
-		if (")".contains(exp)) {
+		if (")".equals(exp)) {
 			isCloseParenthesis = true;
 		} else {
 			isCloseParenthesis = false;
@@ -90,7 +87,7 @@ public class Token {
 	}
 
 	public boolean isLowPrecedence() {
-		return isLowPrecedence;
+		return !isHighPrecedence;
 	}
 
 	public boolean isHighPrecedence() {
